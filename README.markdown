@@ -84,7 +84,7 @@ load Gem.bin_path('bin_script', 'bin_helper')
 ### Disable lock or log
 
 ``` ruby
-Class Bla < BinScript
+class Bla < BinScript
   self.log_level = Logger::DEBUG
   self.enable_locking = false
   self.enable_logging = false
