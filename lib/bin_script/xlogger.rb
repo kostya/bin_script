@@ -48,7 +48,7 @@ class XLogger < Logger
   end
   
   def prod_env?
-    defined?(Rails) && Rails.env.production?
+    defined?(Rails) && Rails.env == 'production'
   end
 end
 
