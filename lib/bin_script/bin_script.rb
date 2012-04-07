@@ -20,7 +20,7 @@ class BinScript
   ]
 
   # Default log level INFO or DEBUG for test env
-  @log_level = (Rails.env.development? ? XLogger::DEBUG : XLogger::INFO)
+  @log_level = (Rails.env == 'development' ? XLogger::DEBUG : XLogger::INFO)
 
   # Enable locking by default
   @enable_locking = true
@@ -168,7 +168,9 @@ class BinScript
 
     # RAILS_ROOT is not availible if rails environment was not loaded. So detect application root in this case from current file path
     def rails_root
-      Pathname.new(Rails.root ? Rails.root : File.join(File.dirname(__FILE__), %w{.. ..})).realpath.to_s
+      path = Rails.root
+      path ||= defined?(APP_ROOT) ? APP_ROOT : '.'
+      Pathname.new(path).realpath.to_s
     end
 
     # Prepare ARGV parameters as hash
@@ -213,7 +215,7 @@ class BinScript
   end
 
   def puts(*arg)
-    return if self.class.disable_puts_for_tests && Rails.env.test?
+    return if self.class.disable_puts_for_tests && Rails.env == 'test'
     Kernel.puts(*arg)
   end
 
@@ -222,11 +224,11 @@ class BinScript
     begin
       @source_argv = ARGV.dup
       @overrided_parameters = {}
-      @params_values = (Rails.env.test? ? {} : self.class.get_argv_values)
+      @params_values = (Rails.env == 'test' ? {} : self.class.get_argv_values)
 
       # Create logger if logging enabled
       if self.class.enable_logging
-        @logger = XLogger.new(:file => log_filename, :dont_touch_rails_logger => (Rails.env.test?))
+        @logger = XLogger.new(:file => log_filename, :dont_touch_rails_logger => (Rails.env == 'test'))
         @logger.level = self.class.log_level
       end
 
@@ -275,7 +277,7 @@ class BinScript
       log_benchmarker_data
     rescue Exception => e
       # Print error info if it's not test env or exit
-      if !Rails.env.test? && e.class != SystemExit && e.class != Interrupt 
+      if Rails.env != 'test' && e.class != SystemExit && e.class != Interrupt 
         msg = self.class.prepare_exception_message(e)
         puts "\n" + msg
         fatal msg
@@ -324,7 +326,7 @@ class BinScript
     when :optional
       #return nil unless @overrided_parameters.has_key?(key) || @params_values.has_key?(key)
       return @overrided_parameters[key] || @params_values[key] || param[:default]
-      when :required
+    when :required
       value = @overrided_parameters[key] || @params_values[key] || param[:default]
       return value
     end

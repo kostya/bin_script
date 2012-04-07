@@ -1,15 +1,5 @@
 #!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
-# This helper is useful for requiring from bin scripts.
-# Detect RAILS_ENV from '-e' parameter in ARGV (or 'development' as default) and load rails environment if need.
-#
-# Sample ./bin/script_name.rb
-# #!/usr/bin/env ruby
-#
-# #NO_RAILS = true # Uncomment this line if you don't need rails environment in your script
-# require File.join(File.dirname(__FILE__),'_bin_helper')
-#
-# Helper will detect class name for this script automatically. So for example above helper call something like this: ScriptName.new.run!
 
 APP_ROOT ||= File.expand_path(File.dirname($0)) + "/../"
 
@@ -57,21 +47,21 @@ ARGV.each_index do |i|
   end
 end
 
-# Если задан ключ -h, то нам нужно только показать хэлп и environment грузить не обязательно
+# -h for show help, Rails not needed
 NO_RAILS = true if ARGV.include?('-h') && !defined?(NO_RAILS)
 
 # Set defaults
 ENV['RAILS_ENV'] ||= 'development'
 
-if !defined?(RAILS_ROOT) && !defined?(NO_RAILS)
+if !defined?(Rails) && !defined?(NO_RAILS)
   # Load rails envoronment if not yet and we need it
   require File.join(APP_ROOT, %w{config environment})
 else
   require 'active_support'
 end
 
-# Load BinScript class source
-require 'bin_script' unless defined?(BinScript) == 'constant'
+# Load BinScript class source (from gem)
+require 'bin_script' if !defined?(BinScript) || !BinScript.respond_to?(:run_script)
 
 # Call script runner
 BinScript.run_script
