@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name = %q{bin_script}
   s.version = BinScript::VERSION
 
-  s.authors = ["Lifshits Dmitry", "Makarchev Konstantin"]
+  s.authors = ["Makarchev Konstantin", "Lifshits Dmitry"]
   s.autorequire = %q{init}
   
   s.description = %q{Easy writing and executing bins(executable scripts) in Rails Application (especially for crontab or god)}
