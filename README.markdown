@@ -1,8 +1,8 @@
 Rails BinScript
 ===============
 
-Easy writing and executing bins (espesually for crontab or god) in Rails project
-For my purposes much better than Rake, Thor and Rails Runner
+Easy writing and executing bins (espesually for crontab or god) in Rails project.
+For my purposes much better than Rake, Thor and Rails Runner.
 
 Features:
 
