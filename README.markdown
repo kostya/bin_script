@@ -25,6 +25,7 @@ Call like:
 
 Examples (default features):
 
+    $ ./bin/bla.rb -h
     $ ./bin/bla.rb -e production 
     $ ./bin/bla.rb -e production -L ./locks/bla.lock
     $ ./bin/bla.rb -e production -l ./log/bla.log
