@@ -70,9 +70,11 @@ end
   
 ### Create bin script without loading Rails Environment
 add into file ./bin/bla.rb 
+
     NO_RAILS=true
 
 example:
+
 ``` ruby
 NO_RAILS = true
 load Gem.bin_path('bin_script', 'bin_helper')  
