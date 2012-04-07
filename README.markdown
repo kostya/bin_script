@@ -81,7 +81,7 @@ load Gem.bin_path('bin_script', 'bin_helper')
 ```
 
 
-### Disable lock or log
+### Options
 
 ``` ruby
 class Bla < BinScript
