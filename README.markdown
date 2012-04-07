@@ -23,7 +23,7 @@ Call like:
 
     $ cd project && ./bin/bla.rb -e production -t -d "2012-04-07" -u "asdf"
 
-Examples (features by default):
+Features by default:
 
     $ ./bin/bla.rb -h
     $ ./bin/bla.rb -e production 
@@ -78,4 +78,15 @@ example:
 ``` ruby
 NO_RAILS = true
 load Gem.bin_path('bin_script', 'bin_helper')  
+```
+
+
+### Disable lock or log
+
+``` ruby
+Class Bla < BinScript
+  self.log_level = Logger::DEBUG
+  self.enable_locking = false
+  self.enable_logging = false
+end
 ```
