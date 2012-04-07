@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+# -*- encoding: utf-8 -*-
+# This helper is useful for requiring from bin scripts.
+# Detect RAILS_ENV from '-e' parameter in ARGV (or 'development' as default) and load rails environment if need.
+#
+# Sample ./bin/script_name.rb
+# #!/usr/bin/env ruby
+#
+# #NO_RAILS = true # Uncomment this line if you don't need rails environment in your script
+# require File.join(File.dirname(__FILE__),'_bin_helper')
+#
+# Helper will detect class name for this script automatically. So for example above helper call something like this: ScriptName.new.run!
+
+APP_ROOT ||= File.expand_path(File.dirname($0)) + "/../"
+
+if defined?(DAEMONIZE) || ARGV.include?('--daemonize') # для демонизации бина
+  ARGV.delete('--daemonize')
+
+  # Stolen from activesupport
+  module Process
+    def self.daemon
+      exit if fork                     # Parent exits, child continues.
+      Process.setsid                   # Become session leader.
+      exit if fork                     # Zap session leader. See [1].
+      return 0
+    end
+  end
+
+  Process.daemon
+
+  if ARGV.include?('--pidfile')
+    pidfile = nil
+
+    ARGV.each_index do |i|
+      if ARGV[i] == '--pidfile' && ARGV.length > i
+        pidfile = ARGV[i+1]
+
+        ARGV.delete('--pidfile')
+        ARGV.delete(pidfile) if pidfile
+        break
+      end
+    end
+
+    if pidfile
+      File.open(pidfile, 'w'){|f| f.write($$) }
+    end
+  end
+end
+
+require 'rubygems'
+
+# Define RAILS_ENV
+ARGV.each_index do |i|
+  if ARGV[i] == '-e' && ARGV.length > i
+    RAILS_ENV = ARGV[i+1]
+    break
+  end
+end
+
+# Если задан ключ -h, то нам нужно только показать хэлп и environment грузить не обязательно
+NO_RAILS = true if ARGV.include?('-h') && !defined?(NO_RAILS)
+
+# Set defaults
+RAILS_ENV = 'development' if defined?(RAILS_ENV).nil?
+
+if !defined?(RAILS_ROOT) && !defined?(NO_RAILS)
+  # Load rails envoronment if not yet and we need it
+  require File.join(APP_ROOT, %w{config environment})
+else
+  require 'active_support'
+end
+
+# Load BinScript class source
+require 'bin_script' unless defined?(BinScript) == 'constant'
+
+# Call script runner
+BinScript.run_script
