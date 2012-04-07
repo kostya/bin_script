@@ -7,6 +7,6 @@ APP_ROOT = File.dirname(path)
 ENV['BUNDLE_GEMFILE'] ||= path
 
 require 'rubygems'
-require 'bundler/setup'
+require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
 load Gem.bin_path('bin_script', 'bin_helper')

@@ -236,6 +236,8 @@ class BinScript
 
     # Print usage and exit if asked
     usage_exit if params(:h)
+    
+    info "====================="
 
     # Create and check lock file if enabled
     if self.class.enable_locking
