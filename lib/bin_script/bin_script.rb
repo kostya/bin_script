@@ -1,7 +1,8 @@
 # -*- encoding: utf-8 -*-
 require 'getoptlong'
 require 'pathname'
-require 'rails' unless defined?(Rails)
+
+require File.dirname(__FILE__) + '/rails_stub'
 require File.dirname(__FILE__) + '/lock_file'
 require File.dirname(__FILE__) + '/xlogger'
 require File.dirname(__FILE__) + '/class_inheritable_attributes'
@@ -19,14 +20,14 @@ class BinScript
       {:key => :L, :type => :optional, :description => "Path to lock file (default \#{Rails.root}/lock/[script_name].lock"}
   ]
 
-  # Default log level INFO or DEBUG for test env
-  @log_level = (Rails.env == 'development' ? XLogger::DEBUG : XLogger::INFO)
-
   # Enable locking by default
   @enable_locking = true
 
   # Enable logging by default
   @enable_logging = true
+  
+  # Default log level INFO or DEBUG for test env
+  @log_level = (RailsStub.env == 'development' ? XLogger::DEBUG : XLogger::INFO)
 
   # По умолчанию мы при каждом запуске скрипта продолжаем писать в основной лог. Но можно записать сюда формат, который
   # можно скормить time.strftime(format) и результат подставится в конец имени файла лога. Таким образом можно делать
@@ -60,8 +61,8 @@ class BinScript
     # Define class level helper method
     singleton.class_eval do
       define_method :info do |message|
-        return unless Rails.logger
-        Rails.logger.send(method,message)
+        return unless RailsStub.logger
+        RailsStub.logger.send(method,message)
       end
     end
 
@@ -71,7 +72,7 @@ class BinScript
       @logger.send(method,message)
     end
   end
-
+  
   class << self
     # Get parameter by key
     def get_parameter(key)
@@ -131,7 +132,7 @@ class BinScript
     # Run script detected by the filename of source script file
     def run_script(filename = $0)
       cfg = parse_script_file_name(Pathname.new(filename).realpath.to_s)
-      cfg[:files].each { |f| require File.join(rails_root, f) }
+      cfg[:files].each { |f| require File.join(RailsStub.root, f) }
 
       # Create instance and call run! for script class
       klass = cfg[:class].constantize
@@ -165,14 +166,7 @@ class BinScript
       @parameters.each { |p| new << p if p[:key] != key }
       @parameters = new
     end
-
-    # RAILS_ROOT is not availible if rails environment was not loaded. So detect application root in this case from current file path
-    def rails_root
-      path = Rails.root
-      path ||= defined?(APP_ROOT) ? APP_ROOT : '.'
-      Pathname.new(path).realpath.to_s
-    end
-
+    
     # Prepare ARGV parameters as hash
     def get_argv_values
       values = {}
@@ -215,7 +209,7 @@ class BinScript
   end
 
   def puts(*arg)
-    return if self.class.disable_puts_for_tests && Rails.env == 'test'
+    return if self.class.disable_puts_for_tests && RailsStub.env == 'test'
     Kernel.puts(*arg)
   end
 
@@ -224,11 +218,11 @@ class BinScript
     begin
       @source_argv = ARGV.dup
       @overrided_parameters = {}
-      @params_values = (Rails.env == 'test' ? {} : self.class.get_argv_values)
+      @params_values = (RailsStub.env == 'test' ? {} : self.class.get_argv_values)
 
       # Create logger if logging enabled
       if self.class.enable_logging
-        @logger = XLogger.new(:file => log_filename, :dont_touch_rails_logger => (Rails.env == 'test'))
+        @logger = XLogger.new(:file => log_filename, :dont_touch_rails_logger => (RailsStub.env == 'test'))
         @logger.level = self.class.log_level
       end
 
@@ -257,7 +251,7 @@ class BinScript
     begin
       # Log important info and call script job
       info "Log level = #{@logger.level}" if self.class.enable_logging
-      info "Parameters: #{@source_argv.join(', ')}"
+      info "Parameters: #{@params_values.inspect}"
       info "Starting script #{self.class.script_name}..."
       start = Time.now
 
@@ -277,7 +271,7 @@ class BinScript
       log_benchmarker_data
     rescue Exception => e
       # Print error info if it's not test env or exit
-      if Rails.env != 'test' && e.class != SystemExit && e.class != Interrupt 
+      if RailsStub.env != 'test' && e.class != SystemExit && e.class != Interrupt 
         msg = self.class.prepare_exception_message(e)
         puts "\n" + msg
         fatal msg
@@ -334,12 +328,12 @@ class BinScript
 
   # Prepare filename of log file
   def lock_filename
-    params(:L).blank? ? File.join(self.class.rails_root, 'locks', "#{self.class.script_name}.lock") : params(:L)
+    params(:L).blank? ? File.join(RailsStub.root, 'locks', "#{self.class.script_name}.lock") : params(:L)
   end
 
   # Prepare filename of log file
   def log_filename
-    params(:l).blank? ? File.join(self.class.rails_root, 'log', "#{self.class.script_name}#{log_filename_time_part}.log") : params(:l)
+    params(:l).blank? ? File.join(RailsStub.root, 'log', "#{self.class.script_name}#{log_filename_time_part}.log") : params(:l)
   end
 
   private

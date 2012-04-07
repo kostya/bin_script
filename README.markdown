@@ -21,9 +21,9 @@ gem 'bin_script'
 
 Call like:
 
-    $ cd project && ./bin/bla.rb -e production -a -b -c -d "asdf"
+    $ cd project && ./bin/bla.rb -e production -t -d "2012-04-07" -u "asdf"
 
-Examples (default features):
+Examples (features by default):
 
     $ ./bin/bla.rb -h
     $ ./bin/bla.rb -e production 
@@ -35,10 +35,10 @@ Examples (default features):
 
 Example Bin
 -----------
-app/models/bin/stuff_script.rb
+app/models/bin/bla_script.rb
 
 ``` ruby
-class StuffScript < BinScript
+class BlaScript < BinScript
   optional :u, "Update string"
   required :d, "Date in format YYYY-MM-DD or YYYY-MM"
   noarg    :t, "Test run"
@@ -66,4 +66,14 @@ class BinScript
   end
 end
 ```
+
   
+### Create bin script without loading Rails Environment
+add into file ./bin/bla.rb 
+    NO_RAILS=true
+
+example:
+``` ruby
+NO_RAILS = true
+load Gem.bin_path('bin_script', 'bin_helper')  
+```

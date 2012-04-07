@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 require 'logger'
 
 class XLogger < Logger
@@ -18,14 +17,14 @@ class XLogger < Logger
     # Don't change default logger if asked
     if hint[:dont_touch_rails_logger].blank? && defined?(ActiveRecord::Base)
       ActiveRecord::Base.logger = self
-      def Rails.logger; ActiveRecord::Base.logger; end
-
-      # This raise warning to STDOUT
-      #Object.const_set "RAILS_DEFAULT_LOGGER", self
+      
+      def Rails.logger
+        ActiveRecord::Base.logger
+      end
     end
 
     self.level = hint[:log_level] || rails_env_log_level
-    log_sql if hint[:log_sql] || !Rails.env.production?
+    log_sql if hint[:log_sql] || !prod_env?
   end
 
   class Formatter < Logger::Formatter
@@ -45,15 +44,21 @@ class XLogger < Logger
   end
 
   def rails_env_log_level
-    Rails.env.production? ? Logger::INFO : Logger::DEBUG
+    prod_env? ? Logger::INFO : Logger::DEBUG
+  end
+  
+  def prod_env?
+    defined?(Rails) && Rails.env.production?
   end
 end
 
-module ActiveRecord
-  module ConnectionAdapters
-    class AbstractAdapter
-      def logger=(val)
-        @logger = val
+if defined?(ActiveRecord)
+  module ActiveRecord
+    module ConnectionAdapters
+      class AbstractAdapter
+        def logger=(val)
+          @logger = val
+        end
       end
     end
   end
