@@ -50,7 +50,7 @@ class StuffScript < BinScript
     if test?
       logger.info "update string #{params(:u)}"        
     else  
-      logger.info "data #{Time.parse(params(:d))}"
+      logger.info "data #{params(:d)}"
     end
   end
 end
