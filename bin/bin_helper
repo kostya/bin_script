@@ -52,7 +52,7 @@ require 'rubygems'
 # Define RAILS_ENV
 ARGV.each_index do |i|
   if ARGV[i] == '-e' && ARGV.length > i
-    RAILS_ENV = ARGV[i+1]
+    ENV['RAILS_ENV'] = ARGV[i+1]
     break
   end
 end
@@ -61,7 +61,7 @@ end
 NO_RAILS = true if ARGV.include?('-h') && !defined?(NO_RAILS)
 
 # Set defaults
-RAILS_ENV = 'development' if defined?(RAILS_ENV).nil?
+ENV['RAILS_ENV'] ||= 'development'
 
 if !defined?(RAILS_ROOT) && !defined?(NO_RAILS)
   # Load rails envoronment if not yet and we need it
