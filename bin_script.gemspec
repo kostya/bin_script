@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.authors = ["Lifshits Dmitry", "Makarchev Konstantin"]
   s.autorequire = %q{init}
   
-  s.description = %q{Easy writing and executing bins (espesually for crontab or god) in Rails project}
+  s.description = %q{Easy writing and executing bins(executable scripts) in Rails Application (especially for crontab or god)}
   
-  s.summary = %q{Easy writing and executing bins (espesually for crontab or god) in Rails project
-For my purposes much better than Rake, Thor and Rails Runner}
+  s.summary = %q{Easy writing and executing bins(executable scripts) in Rails Application (especially for crontab or god).
+For my purposes much better than Rake, Thor and Rails Runner.}
 
   s.email = %q{kostya27@gmail.com}
   s.homepage = %q{http://github.com/kostya/bin_script}
