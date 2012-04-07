@@ -28,15 +28,14 @@ class <%= class_name %>Script < BinScript
   #   FATAL	=	4
   #   UNKNOWN	=	5
   #
-  # По умолчанию мы при каждом запуске скрипта продолжаем писать в основной лог. Но можно записать сюда формат, который
-  # можно скормить time.strftime(format) и результат подставится в конец имени файла лога. Таким образом можно делать
-  # отдельные лог-файлы для каждого запуска, для каждого дня/месяца/года/часа и т.д...
-  # Например "_%Y-%m-%d_%H-%M-%S" - каждый запуск новый лог
-  #          "_%Y-%m-%d"          - каждый день новый лог
+  # By default, each bin logging into main log. Possible to specify log name for date.
+  # Examples: "_%Y-%m-%d_%H-%M-%S" - each execute, new log
+  #           "_%Y-%m-%d"          - each day, new log
   # self.date_log_postfix = "_%Y-%m-%d"
 
-  # Do script job!
+  # Execute
   def do!
     logger.info "Script <%= class_name %> works!"
   end
+  
 end
