@@ -21,7 +21,7 @@ gem 'bin_script'
 
 Call like:
 
-    $ cd project && ./bin/bla.rb -e production -t -d "2012-04-07" -u "asdf"
+    $ cd project && ./bin/bla.rb -e production --test -d "2012-04-07" -u "asdf"
 
 Features by default:
 
@@ -32,7 +32,6 @@ Features by default:
     $ ./bin/bla.rb -e production --daemonize --pidfile=./tmp/bla.pid
 
 
-
 Example Bin
 -----------
 app/models/bin/bla_script.rb
@@ -40,8 +39,8 @@ app/models/bin/bla_script.rb
 ``` ruby
 class BlaScript < BinScript
   optional :u, "Update string"
-  required :d, "Date in format YYYY-MM-DD or YYYY-MM"
-  noarg    :t, "Test run"
+  required :d, :description => "Date in format YYYY-MM-DD or YYYY-MM", :default => "2012-04-01"
+  noarg    :t, :decription => "Test run", :alias => 'test'
   
   def test?
     params(:t)

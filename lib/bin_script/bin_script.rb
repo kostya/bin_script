@@ -14,10 +14,10 @@ class BinScript
   
   # Default parameters
   @parameters = [
-      {:key => :e, :type => :optional, :description => "Rails environment ID (default - development)"},
+      {:key => :e, :type => :required, :description => "Rails environment ID (default - development)"},
       {:key => :h, :type => :noarg,    :description => "Print usage message", :alias => [:H, :help]},
-      {:key => :l, :type => :optional, :description => "Path to log file (default \#{Rails.root}/log/[script_name].log"},
-      {:key => :L, :type => :optional, :description => "Path to lock file (default \#{Rails.root}/lock/[script_name].lock"}
+      {:key => :l, :type => :required, :description => "Path to log file (default \#{Rails.root}/log/[script_name].log)"},
+      {:key => :L, :type => :required, :description => "Path to lock file (default \#{Rails.root}/locks/[script_name].lock)"}
   ]
 
   # Enable locking by default
@@ -179,7 +179,12 @@ class BinScript
       usage_msg += "Error: #{message}\n\n" unless message.nil?
       usage_msg += "Use: ./bin/#{script_name}.rb [OPTIONS]\n\nAvailible options:\n\n"
       @parameters.each do |param|
-        usage_msg += "  #{prefix_key param[:key]}  #{param[:description]}\n"
+        arg = case param[:type]
+          when :required then " v "
+          when :optional then "[v]"
+          when :noarg    then "   "
+        end
+        usage_msg += "  #{prefix_key param[:key]}#{arg} #{param[:description]}\n"
       end
       usage_msg += "\n"
       usage_msg
@@ -227,12 +232,25 @@ class BinScript
       usage_exit e.message
     end
   end
+  
+  def check_required_params
+    self.class.parameters.each do |param|
+      if param[:type] == :required && @params_values.has_key?(param[:key])
+        if @params_values[param[:key]].nil?
+          error "Param #{param[:key]} require value, but not present"
+          usage_exit
+        end
+      end
+    end
+  end
 
   # Create lock file, call script code and unlock file even if error happend.
   def run!
 
     # Print usage and exit if asked
     usage_exit if params(:h)
+    
+    check_required_params
     
     info "====================="
 
@@ -317,7 +335,6 @@ class BinScript
     when :noarg
       return (@overrided_parameters.has_key?(key) && @overrided_parameters[key]) || !@params_values[key].nil?
     when :optional
-      #return nil unless @overrided_parameters.has_key?(key) || @params_values.has_key?(key)
       return @overrided_parameters[key] || @params_values[key] || param[:default]
     when :required
       value = @overrided_parameters[key] || @params_values[key] || param[:default]

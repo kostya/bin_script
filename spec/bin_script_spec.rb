@@ -111,13 +111,13 @@ Use: ./bin/test_script.rb [OPTIONS]
 
 Availible options:
 
-  -e  Rails environment ID (default - development)
-  -h  Print usage message
-  -l  Path to log file (default \#{Rails.root}/log/[script_name].log
-  -L  Path to lock file (default \#{Rails.root}/lock/[script_name].lock
-  -n  Test parameter that can't have argument
-  -o  Test parameter that can have argument
-  -r  Test parameter that should have argument
+  -e v  Rails environment ID (default - development)
+  -h    Print usage message
+  -l v  Path to log file (default \#{Rails.root}/log/[script_name].log)
+  -L v  Path to lock file (default \#{Rails.root}/locks/[script_name].lock)
+  -n    Test parameter that can't have argument
+  -o[v] Test parameter that can have argument
+  -r v  Test parameter that should have argument
 
 USAGE
       TestScript.usage.should == USAGE
