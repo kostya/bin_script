@@ -10,7 +10,7 @@ require File.dirname(__FILE__) + '/class_inheritable_attributes'
 
 class BinScript
   include ClassLevelInheritableAttributes
-  class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests
+  class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests, :description
   
   # Default parameters
   @parameters = [
@@ -28,6 +28,9 @@ class BinScript
   
   # Default log level INFO or DEBUG for test env
   @log_level = (RailsStub.env == 'development' ? XLogger::DEBUG : XLogger::INFO)
+  
+  # Bin Description
+  @description = nil
 
   # By default, each bin logging into main log. Possible to specify log name for date.
   # Examples: "_%Y-%m-%d_%H-%M-%S" - each execute, new log
@@ -177,7 +180,10 @@ class BinScript
     def usage(message = nil)
       usage_msg = ''
       usage_msg += "Error: #{message}\n\n" unless message.nil?
-      usage_msg += "Use: ./bin/#{script_name}.rb [OPTIONS]\n\nAvailible options:\n\n"
+      usage_msg += "Use: ./bin/#{script_name}.rb [OPTIONS]\n\n"
+      usage_msg += "\"#{self.description}\"\n\n" if message.nil? && self.description.present?
+      usage_msg += "Availible options:\n\n"
+      
       @parameters.each do |param|
         arg = case param[:type]
           when :required then " v "
