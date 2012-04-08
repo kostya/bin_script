@@ -3,7 +3,7 @@
 
 APP_ROOT ||= File.expand_path(File.dirname($0)) + "/../"
 
-if defined?(DAEMONIZE) || ARGV.include?('--daemonize') # для демонизации бина
+if defined?(DAEMONIZE) || ARGV.include?('--daemonize') # for daemonize bin
   ARGV.delete('--daemonize')
 
   # Stolen from activesupport

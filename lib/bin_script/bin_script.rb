@@ -29,15 +29,12 @@ class BinScript
   # Default log level INFO or DEBUG for test env
   @log_level = (RailsStub.env == 'development' ? XLogger::DEBUG : XLogger::INFO)
 
-  # По умолчанию мы при каждом запуске скрипта продолжаем писать в основной лог. Но можно записать сюда формат, который
-  # можно скормить time.strftime(format) и результат подставится в конец имени файла лога. Таким образом можно делать
-  # отдельные лог-файлы для каждого запуска, для каждого дня/месяца/года/часа и т.д...
-  # Например "_%Y-%m-%d_%H-%M-%S" - каждый запуск новый лог
-  #          "_%Y-%m-%d"          - каждый день новый лог
+  # By default, each bin logging into main log. Possible to specify log name for date.
+  # Examples: "_%Y-%m-%d_%H-%M-%S" - each execute, new log
+  #           "_%Y-%m-%d"          - each day, new log
   @date_log_postfix = ''
 
-  # По умолчанию puts работает как обычно, но BinScript может ничего не выводить если RAILS_ENV=test
-  # Если скрипт что-то выводит, это попадает в лог спеков, что не красиво. Так что для таких скриптов лучше включать эту опцию
+  # BinScript can output with puts, for specs puts is not good, this option disable puts in test env
   @disable_puts_for_tests = false
 
   # Allowed parameter types. Equivalence aliases with GetoptLong constants.
