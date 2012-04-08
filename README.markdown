@@ -42,6 +42,8 @@ class BlaScript < BinScript
   required :d, :description => "Date in format YYYY-MM-DD or YYYY-MM", :default => "2012-04-01"
   noarg    :t, :decription => "Test run", :alias => 'test'
   
+  self.description = "Super Bla script"
+  
   def test?
     params(:t)
   end
