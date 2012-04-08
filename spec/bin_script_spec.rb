@@ -107,7 +107,7 @@ describe BinScript do
   describe "usage" do
     it "should generate usage message" do
       USAGE = <<USAGE
-Use: ./bin/test_script.rb [OPTIONS]
+Use: ./bin/test.rb [OPTIONS]
 
 Availible options:
 

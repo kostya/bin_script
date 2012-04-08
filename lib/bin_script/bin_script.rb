@@ -85,6 +85,10 @@ class BinScript
     def script_name
       self.to_s.underscore.gsub('/','__')
     end
+    
+    def bin_name
+      script_name.gsub('_script', '')
+    end
 
     # Parse script filename. Extract important path parts
     def parse_script_file_name(filename)
@@ -180,7 +184,7 @@ class BinScript
     def usage(message = nil)
       usage_msg = ''
       usage_msg += "Error: #{message}\n\n" unless message.nil?
-      usage_msg += "Use: ./bin/#{script_name}.rb [OPTIONS]\n\n"
+      usage_msg += "Use: ./bin/#{bin_name}.rb [OPTIONS]\n\n"
       usage_msg += "\"#{self.description}\"\n\n" if message.nil? && self.description.present?
       usage_msg += "Availible options:\n\n"
       
@@ -311,7 +315,7 @@ class BinScript
 
   # Print usage message and exit
   def usage_exit(message = nil)
-    error "Exit with error message: #{message}"
+    error "Exit with error message: #{message}" if message.present?
     Kernel.puts(self.class.usage(message))
     exit
   end
