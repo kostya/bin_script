@@ -29,7 +29,7 @@ Features by default:
     $ ./bin/bla.rb -e production 
     $ ./bin/bla.rb -e production -L ./locks/bla.lock
     $ ./bin/bla.rb -e production -l ./log/bla.log
-    $ ./bin/bla.rb -e production --daemonize --pidfile=./tmp/bla.pid
+    $ ./bin/bla.rb -e production --daemonize --pidfile ./tmp/bla.pid
 
 
 Example Bin
