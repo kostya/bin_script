@@ -366,12 +366,12 @@ class BinScript
 
   # Prepare filename of log file
   def lock_filename
-    params(:L).blank? ? File.join(RailsStub.root, 'locks', "#{self.class.script_name}.lock") : params(:L)
+    params(:L).blank? ? File.join(RailsStub.root, lockfile) : params(:L)
   end
 
   # Prepare filename of log file
   def log_filename
-    params(:l).blank? ? File.join(RailsStub.root, 'log', "#{self.class.script_name}#{log_filename_time_part}.log") : params(:l)
+    params(:l).blank? ? File.join(RailsStub.root, logfile) : params(:l)
   end
 
   private
@@ -410,6 +410,14 @@ Type: #{e.class.inspect}
 Error occurs: #{e.message}
 Backtrace: #{e.backtrace.join("\n")}
 EXCEPTION
+  end
+  
+  def logfile
+    "log/#{self.class.bin_name}#{log_filename_time_part}.log"
+  end
+  
+  def lockfile
+    "locks/#{self.class.bin_name}.lock"
   end
 
   def inc_counter(id, counter = 1)
