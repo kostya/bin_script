@@ -136,8 +136,8 @@ class BinScript
     def load_env
       unless defined?(NO_RAILS)
         # Load rails envoronment if not yet and we need it
-        file = File.join(RailsStub.root, %w{config environment})
-        require file
+        file = File.join(RailsStub.root, %w{config environment.rb})        
+        require file if File.exists?(file)
       else
         require 'active_support'
       end    
