@@ -53,13 +53,6 @@ NO_RAILS = true if ARGV.include?('-h') && !defined?(NO_RAILS)
 # Set defaults
 ENV['RAILS_ENV'] ||= 'development'
 
-if !defined?(Rails) && !defined?(NO_RAILS)
-  # Load rails envoronment if not yet and we need it
-  require File.join(APP_ROOT, %w{config environment})
-else
-  require 'active_support'
-end
-
 # Load BinScript class source (from gem)
 require 'bin_script' if !defined?(BinScript) || !BinScript.respond_to?(:run_script)
 

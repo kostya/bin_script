@@ -132,6 +132,16 @@ class BinScript
 
       files.reverse
     end
+    
+    def load_env
+      unless defined?(NO_RAILS)
+        # Load rails envoronment if not yet and we need it
+        file = File.join(RailsStub.root, %w{config environment})
+        require file
+      else
+        require 'active_support'
+      end    
+    end
 
     # Run script detected by the filename of source script file
     def run_script(filename = $0)
@@ -274,6 +284,8 @@ class BinScript
         exit
       end
     end
+    
+    self.class.load_env
 
     begin
       # Log important info and call script job
