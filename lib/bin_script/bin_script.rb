@@ -10,7 +10,7 @@ require File.dirname(__FILE__) + '/class_inheritable_attributes'
 
 class BinScript
   include ClassLevelInheritableAttributes
-  class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests, :description_str
+  class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests, :description
   
   # Default parameters
   @parameters = [
@@ -185,7 +185,7 @@ class BinScript
       usage_msg = ''
       usage_msg += "Error: #{message}\n\n" unless message.nil?
       usage_msg += "Use: ./bin/#{bin_name}.rb [OPTIONS]\n\n"
-      usage_msg += "\"#{self.description_str}\"\n\n" if message.nil? && self.description_str.present?
+      usage_msg += "\"#{self.description}\"\n\n" if message.nil? && self.description.present?
       usage_msg += "Availible options:\n\n"
       
       @parameters.each do |param|
@@ -218,10 +218,6 @@ class BinScript
       key = key.to_s
       (key.length > 1 ? "--" : "-") + key
     end
-    
-    def description(desc)
-      self.description_str = desc
-    end    
   end
 
   def puts(*arg)
