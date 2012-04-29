@@ -2,7 +2,8 @@ PATH
   remote: .
   specs:
     bin_script (0.1.6)
-      activesupport (>= 2.3.2)
+      activesupport
+      rails
 
 GEM
   remote: http://rubygems.org/
@@ -97,8 +98,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
   bin_script!
-  rails
   rake
   rspec

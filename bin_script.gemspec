@@ -21,7 +21,9 @@ For my purposes much better than Rake, Thor and Rails Runner.}
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency 'activesupport', ">=2.3.2"  
+  s.add_dependency 'activesupport'
+  s.add_dependency 'rails'
   s.add_development_dependency "rspec"
-  
+  s.add_development_dependency "rake"
+   
 end
