@@ -378,7 +378,7 @@ class BinScript
 
   # Current time logname part.
   def self.log_filename_time_part
-    Time.now.strftime(date_log_postfix)
+    Time.now.strftime(self.date_log_postfix)
   end
 
   # Override value for one parameter
@@ -417,7 +417,7 @@ EXCEPTION
   end
   
   def root
-    RailsStub.root
+    self.class.root
   end  
   
   def inc_counter(id, counter = 1)
