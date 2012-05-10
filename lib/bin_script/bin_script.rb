@@ -10,7 +10,7 @@ require File.dirname(__FILE__) + '/class_inheritable_attributes'
 
 class BinScript
   include ClassLevelInheritableAttributes
-  class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests, :description
+  class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests, :description, :log_name, :lock_name
   
   # Default parameters
   @parameters = [
@@ -39,7 +39,7 @@ class BinScript
 
   # BinScript can output with puts, for specs puts is not good, this option disable puts in test env
   @disable_puts_for_tests = false
-
+  
   # Allowed parameter types. Equivalence aliases with GetoptLong constants.
   PARAMETER_TYPES = {
     :noarg     => GetoptLong::NO_ARGUMENT,
@@ -136,7 +136,7 @@ class BinScript
     def load_env
       unless defined?(NO_RAILS)
         # Load rails envoronment if not yet and we need it
-        file = File.join(RailsStub.root, %w{config environment.rb})        
+        file = File.join(root, %w{config environment.rb})        
         require file if File.exists?(file)
       else
         require 'active_support'
@@ -146,7 +146,7 @@ class BinScript
     # Run script detected by the filename of source script file
     def run_script(filename = $0)
       cfg = parse_script_file_name(Pathname.new(filename).realpath.to_s)
-      cfg[:files].each { |f| require File.join(RailsStub.root, f) }
+      cfg[:files].each { |f| require File.join(root, f) }
 
       # Create instance and call run! for script class
       klass = cfg[:class].constantize
@@ -366,19 +366,19 @@ class BinScript
 
   # Prepare filename of log file
   def lock_filename
-    params(:L).blank? ? File.join(RailsStub.root, lockfile) : params(:L)
+    params(:L).blank? ? self.class.lock_name : params(:L)
   end
 
   # Prepare filename of log file
   def log_filename
-    params(:l).blank? ? File.join(RailsStub.root, logfile) : params(:l)
+    params(:l).blank? ? self.class.log_name : params(:l)
   end
 
   private
 
   # Current time logname part.
-  def log_filename_time_part
-    Time.now.strftime(self.class.date_log_postfix)
+  def self.log_filename_time_part
+    Time.now.strftime(date_log_postfix)
   end
 
   # Override value for one parameter
@@ -411,15 +411,15 @@ Error occurs: #{e.message}
 Backtrace: #{e.backtrace.join("\n")}
 EXCEPTION
   end
-  
-  def logfile
-    "log/#{self.class.bin_name}#{log_filename_time_part}.log"
-  end
-  
-  def lockfile
-    "locks/#{self.class.bin_name}.lock"
-  end
 
+  def self.root
+    RailsStub.root
+  end
+  
+  def root
+    RailsStub.root
+  end  
+  
   def inc_counter(id, counter = 1)
     # stub    
   end
@@ -427,5 +427,11 @@ EXCEPTION
   def notify_about_error(ex)
     # stub
   end
+  
+  # path to log file
+  @log_name = "#{root}/log/#{bin_name}#{log_filename_time_part}.log"
+
+  # path log lock file
+  @lock_name = "#{root}/locks/#{bin_name}.lock"
   
 end

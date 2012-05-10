@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bin_script (0.1.6)
+    bin_script (0.1.7)
       activesupport (>= 2.3.2)
 
 GEM
