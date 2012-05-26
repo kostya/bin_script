@@ -16,7 +16,7 @@ Rails 2.3 and 3 compatible
 gem 'bin_script'
 ```
 
-    rails g bin:bin bla
+    rails generate bin:bin bla
     (for 2.3 copy generator into lib/generators and run: ./script/generate bin bla)
 
 Call like:
