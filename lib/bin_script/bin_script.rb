@@ -262,19 +262,20 @@ class BinScript
     
     check_required_params
     
-    info "====================="
-
     # Create and check lock file if enabled
     if self.class.enable_locking
       @lock = LockFile.new(lock_filename)
       @lock.quiet = true # Don't write errors to STDERR
-      info "Use lock file: #{@lock.path}"
+      
       if(@lock.lock)
-        warn "Lock file '#{@lock.path}' already open in exclusive mode. Exit!"
+        warn "--- Try start. Buy lock file '#{@lock.path}' already open in exclusive mode. Exit! ---"
         exit
       end
+      
+      info "=" * 100
+      info "Use lock file: #{@lock.path}"
     end
-
+    
     begin
       # Log important info and call script job
       info "Log level = #{@logger.level}" if self.class.enable_logging
@@ -287,8 +288,7 @@ class BinScript
 
       do!
       duration = Time.now - start
-      info "Script #{self.class.script_name} finished!"
-      info "Script job duration: #{duration}"
+      info "Script #{self.class.script_name} finished! (#{"%.4f" % duration.to_f} sec)"
       info "Exit status: #{@exit_status}" if @exit_status
 
       # Инкрементируем время работы э
