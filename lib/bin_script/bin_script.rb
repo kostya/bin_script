@@ -279,7 +279,7 @@ class BinScript
       # Log important info and call script job
       info "Log level = #{@logger.level}" if self.class.enable_logging
       info "Parameters: #{@params_values.inspect}"
-      info "Starting script #{self.class.script_name}..."
+      info "Starting script #{self.class.script_name} in #{Rails.env} env..."
       start = Time.now
 
       # Инкрементируем счетчик запусков этого скрипта
