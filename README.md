@@ -17,6 +17,7 @@ gem 'bin_script'
 ```
 
     rails generate bin:bin bla
+    
     (for 2.3 copy generator into lib/generators and run: ./script/generate bin bla)
 
 Call like:
@@ -58,30 +59,6 @@ class BlaScript < BinScript
 end
 ```
 
-### Custom exception notifier (create initializer with:)
-
-``` ruby
-class BinScript
-  def notify_about_error(exception)
-    Mailter.some_notification(exception)...
-  end
-end
-```
-
-  
-### Create bin script without loading Rails Environment
-add into file ./bin/bla.rb 
-
-    NO_RAILS=true
-
-example:
-
-``` ruby
-NO_RAILS = true
-load Gem.bin_path('bin_script', 'bin_helper')  
-```
-
-
 ### Options
 
 ``` ruby
@@ -91,3 +68,15 @@ class BlaScript < BinScript
   self.enable_logging = false
 end
 ```
+
+### Custom exception notifier (create initializer with:)
+
+``` ruby
+class BinScript
+  def notify_about_error(exception)
+      Mailter.some_notification(exception)...
+  end
+end
+```
+
+        
