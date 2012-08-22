@@ -122,7 +122,7 @@ class BinScript
       files = []
 
       # Calculate and add to list file with script class itself
-      class_file = File.join(%w{app models bin}, parts)
+      class_file = File.join(%w{app bins}, parts)
       class_file += '_nagios' if(parts.length > 1)
       class_file += '_script.rb'
       files << class_file

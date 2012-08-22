@@ -7,8 +7,8 @@ if Rails::VERSION::MAJOR >= 3
 
       def add_files
         template "script.rb", "bin/#{file_path}"
-        template "script_class.rb", "app/models/bin/#{file_path}_script.rb"
-        template "spec.rb", "spec/models/bin/#{file_path}_script_spec.rb"
+        template "script_class.rb", "app/bins/#{file_path}_script.rb"
+        template "spec.rb", "spec/bins/#{file_path}_script_spec.rb"
         chmod "bin/#{file_path}", 0755
       end
     end
@@ -23,9 +23,9 @@ if Rails::VERSION::MAJOR == 2
     def manifest
       record do |m|
         m.template "script.rb", "bin/#{file_path}", :chmod => 0755
-        m.template "script_class.rb", "app/models/bin/#{file_path}_script.rb"
-        m.directory "spec/models/bin"
-        m.template "spec.rb", "spec/models/bin/#{file_path}_script_spec.rb"
+        m.template "script_class.rb", "app/bins/#{file_path}_script.rb"
+        m.directory "spec/bins"
+        m.template "spec.rb", "spec/bins/#{file_path}_script_spec.rb"
       end
     end
   end

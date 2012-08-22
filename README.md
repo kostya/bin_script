@@ -35,7 +35,7 @@ Features by default:
 
 Example Bin
 -----------
-app/models/bin/bla_script.rb
+app/bins/bla_script.rb
 
 ``` ruby
 class BlaScript < BinScript
