@@ -22,15 +22,15 @@ gem 'bin_script'
 
 Call like:
 
-    $ cd project && ./bin/bla.rb -e production --test -d "2012-04-07" -u "asdf"
+    $ cd project && ./bin/bla -e production --test -d "2012-04-07" -u "asdf"
 
 Features by default:
 
-    $ ./bin/bla.rb -h
-    $ ./bin/bla.rb -e production 
-    $ ./bin/bla.rb -e production -L ./locks/bla.lock
-    $ ./bin/bla.rb -e production -l ./log/bla.log
-    $ ./bin/bla.rb -e production --daemonize --pidfile ./tmp/bla.pid
+    $ ./bin/bla -h
+    $ ./bin/bla -e production 
+    $ ./bin/bla -e production -L ./locks/bla.lock
+    $ ./bin/bla -e production -l ./log/bla.log
+    $ ./bin/bla -e production --daemonize --pidfile ./tmp/bla.pid
 
 
 Example Bin
