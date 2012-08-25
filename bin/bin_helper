@@ -17,24 +17,6 @@ if defined?(DAEMONIZE) || ARGV.include?('--daemonize') # for daemonize bin
   end
 
   Process.daemon
-
-  if ARGV.include?('--pidfile')
-    pidfile = nil
-
-    ARGV.each_index do |i|
-      if ARGV[i] == '--pidfile' && ARGV.length > i
-        pidfile = ARGV[i+1]
-
-        ARGV.delete('--pidfile')
-        ARGV.delete(pidfile) if pidfile
-        break
-      end
-    end
-
-    if pidfile
-      File.open(pidfile, 'w'){|f| f.write($$) }
-    end
-  end
 end
 
 require 'rubygems'

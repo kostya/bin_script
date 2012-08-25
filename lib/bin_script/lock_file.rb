@@ -13,7 +13,7 @@ class LockFile
     @logger = logger || $logger
   end
 
-  def lock(waiting_unlock = false)
+  def lock(waiting_unlock = false, write_pid = false)
     flags = File::WRONLY | File::TRUNC | File::CREAT
 
     @f = File.open(@path, flags)
@@ -24,6 +24,12 @@ class LockFile
       log "File '#{@path}' already open in exclusive mode.\n"
       return true
     end
+    
+    if write_pid
+      @f.write($$)
+      @f.flush
+    end
+    
     return false
   end
 

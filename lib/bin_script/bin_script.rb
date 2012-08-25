@@ -17,7 +17,7 @@ class BinScript
       {:key => :e, :type => :required, :description => "Rails environment ID (default - development)"},
       {:key => :h, :type => :noarg,    :description => "Print usage message", :alias => [:H, :help]},
       {:key => :l, :type => :required, :description => "Path to log file (default \#{Rails.root}/log/[script_name].log)"},
-      {:key => :L, :type => :required, :description => "Path to lock file (default \#{Rails.root}/locks/[script_name].lock)"}
+      {:key => :L, :type => :required, :description => "Path to lock file (default \#{Rails.root}/tmp/pids/[script_name].pid)"}
   ]
 
   # Enable locking by default
@@ -267,7 +267,7 @@ class BinScript
       @lock = LockFile.new(lock_filename)
       @lock.quiet = true # Don't write errors to STDERR
       
-      if(@lock.lock)
+      if @lock.lock(false, true)
         msg = "--- Try start. Buy lock file '#{@lock.path}' already open in exclusive mode. Exit! ---"
         # puts msg # puts is not good idea, because cron will mail it, but this is not error
         warn msg
@@ -357,7 +357,7 @@ class BinScript
 
   # Prepare filename of log file
   def lock_filename
-    params(:L).blank? ? File.join(RailsStub.root, 'locks', "#{self.class.script_name}.lock") : params(:L)
+    params(:L).blank? ? File.join(RailsStub.root, 'tmp', 'pids', "#{self.class.script_name}.pid") : params(:L)
   end
 
   # Prepare filename of log file
