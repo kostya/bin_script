@@ -268,19 +268,22 @@ class BinScript
       @lock.quiet = true # Don't write errors to STDERR
       
       if(@lock.lock)
-        warn "--- Try start. Buy lock file '#{@lock.path}' already open in exclusive mode. Exit! ---"
+        msg = "--- Try start. Buy lock file '#{@lock.path}' already open in exclusive mode. Exit! ---"
+        # puts msg # puts is not good idea, because cron will mail it, but this is not error
+        warn msg
         exit
       end
-      
-      info "=" * 100
-      info "Use lock file: #{@lock.path}"
     end
     
     begin
       # Log important info and call script job
-      info "Log level = #{@logger.level}" if self.class.enable_logging
-      info "Parameters: #{@params_values.inspect}"
-      info "Starting script #{self.class.script_name} in #{RailsStub.env} env..."
+      info ""
+      
+      log_params = {:env => RailsStub.env, :log_level => (self.class.enable_logging ? @logger.level : nil), :lock_file => (self.class.enable_locking ? @lock.path : nil)}
+      
+      info "> Script #{self.class.script_name} started! (#{log_params.inspect})"
+      info "- Parameters: #{@params_values.inspect}"
+      
       start = Time.now
 
       # Инкрементируем счетчик запусков этого скрипта
@@ -288,7 +291,7 @@ class BinScript
 
       do!
       duration = Time.now - start
-      info "Script #{self.class.script_name} finished! (#{"%.4f" % duration.to_f} sec)"
+      info "< Script #{self.class.script_name} finished! (#{"%.4f" % duration.to_f} sec)"
       info "Exit status: #{@exit_status}" if @exit_status
 
       # Инкрементируем время работы э
