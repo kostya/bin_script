@@ -15,7 +15,6 @@ describe BinScript do
   describe "class name detection" do
     before(:all) do
       @test_date = [
-        {:filename => "/prj/bin/nagios/some.rb", :parts => ['nagios','some'], :class => "Nagios::SomeNagiosScript", :files => ["app/models/nagios_script.rb", "app/bins/nagios/some_nagios_script.rb"]},
         {:filename => "/prj/bin/another.rb", :parts => ['another'], :class => "AnotherScript", :files => ["app/bins/another_script.rb"]}
       ]
       @test_keys = [:parts, :class, :files]
