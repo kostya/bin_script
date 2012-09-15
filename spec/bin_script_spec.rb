@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe BinScript do
   before :each do
-    root = Pathname.new(File.dirname(__FILE__) + '/../').realpath.to_s
+    root = Pathname.new(File.dirname(__FILE__) + '/test_dir/').realpath.to_s
     Rails.stub!(:root).and_return(root)
   end
   
@@ -13,9 +13,14 @@ describe BinScript do
   end
 
   describe "class name detection" do
-    before(:all) do
+    before(:each) do
       @test_date = [
-        {:filename => "/prj/bin/another.rb", :parts => ['another'], :class => "AnotherScript", :files => ["app/bins/another_script.rb"]}
+        {:filename => "/prj/bin/bluh", :parts => ['bluh'], :class => "BluhScript", :files => [File.join(Rails.root, "/app/models/bluh_script.rb")]},
+        {:filename => "/prj/bin/blah", :parts => ['blah'], :class => "BlahScript", :files => [File.join(Rails.root, "/app/bins/blah_script.rb")]},
+        {:filename => "/prj/bin/bleh", :parts => ['bleh'], :class => "BlehScript", :files => [File.join(Rails.root, "/app/models/bin/bleh_script.rb")]},
+        {:filename => "/prj/bin/bloh", :parts => ['bloh'], :class => "BlohScript", :files => [File.join(Rails.root, "/app/bins/1/bloh_script.rb")]},
+        {:filename => "/prj/bin/blih", :parts => ['blih'], :class => "BlihScript", :files => [File.join(Rails.root, "/script/blih_script.rb")]},
+        {:filename => "/prj/bin/bljh", :parts => ['bljh'], :class => "BljhScript", :files => [File.join(Rails.root, "/app/scripts/66/bljh_script.rb")]},
       ]
       @test_keys = [:parts, :class, :files]
     end
@@ -26,7 +31,7 @@ describe BinScript do
       end
     end
   end
-
+  
   describe "parameters" do
     it 'should accept string as description' do
       TestScript.get_parameter(:n)[:description].should == "Test parameter that can't have argument"

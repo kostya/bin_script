@@ -121,21 +121,22 @@ class BinScript
     def calculate_script_class_filename(parts)
       files = []
 
-      # Calculate and add to list file with script class itself
-      class_file = File.join(%w{app bins}, parts)
-      class_file += '_script.rb'
-      files << class_file
-
-      # Add intermediate classes
-      parts[0..-2].each { |p| files << "app/models/#{p}_script.rb" }
-
+      # Collect from disk, needed class files      
+      parts.each do |p|
+        off = "app/{bin,bins,models,script,scripts}/**/#{p}_script.rb"
+        files += Dir[File.join(RailsStub.root, off)]
+        
+        off = "script/**/#{p}_script.rb"
+        files += Dir[File.join(RailsStub.root, off)]
+      end
+      
       files.reverse
     end
 
     # Run script detected by the filename of source script file
     def run_script(filename = $0)
       cfg = parse_script_file_name(Pathname.new(filename).realpath.to_s)
-      cfg[:files].each { |f| require File.join(RailsStub.root, f) }
+      cfg[:files].each { |f| require f }
 
       # Create instance and call run! for script class
       klass = cfg[:class].constantize
