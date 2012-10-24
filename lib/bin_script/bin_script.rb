@@ -301,7 +301,9 @@ class BinScript
       log_benchmarker_data
     rescue Exception => e
       # Print error info if it's not test env or exit
-      if RailsStub.env != 'test' && e.class != SystemExit && e.class != Interrupt 
+
+      no_ex = (e.class == SystemExit) || (e.class == Interrupt) || (e.class == SignalException) || (RailsStub.env == 'test')
+      unless no_ex
         msg = self.class.prepare_exception_message(e)
         puts "\n" + msg
         fatal msg
