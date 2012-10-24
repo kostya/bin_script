@@ -302,12 +302,14 @@ class BinScript
     rescue Exception => e
       # Print error info if it's not test env or exit
 
-      no_ex = (e.class == SystemExit) || (e.class == Interrupt) || (e.class == SignalException) || (RailsStub.env == 'test')
-      unless no_ex
+      exit_mes = (e.class == SystemExit) || (e.class == Interrupt) || (e.class == SignalException) || (RailsStub.env == 'test')
+      unless exit_mes
         msg = self.class.prepare_exception_message(e)
         puts "\n" + msg
         fatal msg
         notify_about_error(e)
+      else
+        error "Get exit message! #{e.message}"
       end
 
       # Инкрементируем счетчик ошибок этого скрипта
