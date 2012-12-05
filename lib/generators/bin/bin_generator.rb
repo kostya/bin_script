@@ -6,6 +6,7 @@ if Rails::VERSION::MAJOR >= 3
       source_root File.expand_path("../templates", __FILE__)
 
       def add_files
+        file_name.sub!('_script', '')
         template "script.rb", "bin/#{file_path}"
         template "script_class.rb", "app/bins/#{file_path}_script.rb"
         template "spec.rb", "spec/bins/#{file_path}_script_spec.rb"
@@ -22,6 +23,7 @@ if Rails::VERSION::MAJOR == 2
   class BinGenerator < Rails::Generator::NamedBase
     def manifest
       record do |m|
+        file_name.sub!('_script', '')
         m.template "script.rb", "bin/#{file_path}", :chmod => 0755
         m.template "script_class.rb", "app/bins/#{file_path}_script.rb"
         m.directory "spec/bins"
