@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe BinScript do
   before :each do
     root = Pathname.new(File.dirname(__FILE__) + '/test_dir/').realpath.to_s
-    Rails.stub!(:root).and_return(root)
+    Rails.stub(:root).and_return(root)
   end
   
   class TestScript < BinScript
