@@ -1,16 +1,17 @@
 Rails BinScript
 ===============
 
-Easy writing and executing bins(executable scripts) in Rails Application (especially for crontab or god).
-For my purposes much better than Rake, Thor and Rails Runner.
+Gem for easy writing and executing scripts in Rails Application. For my purposes much better than Rake, Thor and Rails Runner.
 
 Features:
 
 1. Each bin is a class
 2. Easy writing tests
-3. Bin use lock file and logger with formatter when executing
-  
-Rails 2.3 and 3 compatible
+3. Custom lock file
+4. Custom logger with formatter for each script
+5. Can be daemonized
+
+Tested on Rails 2.3 and 3.2
 
 ``` ruby
 gem 'bin_script'
@@ -22,10 +23,10 @@ Call like:
 
     $ cd project && ./bin/bla -e production --test -d "2012-04-07" -u "asdf"
 
-Features by default:
+Call examples:
 
     $ ./bin/bla -h
-    $ ./bin/bla -e production 
+    $ ./bin/bla -e production
     $ ./bin/bla -e production -L ./locks/bla.lock
     $ ./bin/bla -e production -l ./log/bla.log
     $ ./bin/bla -e production --daemonize --pidfile ./tmp/bla.pid
@@ -40,17 +41,17 @@ class BlaScript < BinScript
   optional :u, "Update string"
   required :d, :description => "Date in format YYYY-MM-DD or YYYY-MM", :default => "2012-04-01"
   noarg    :t, :decription => "Test run", :alias => 'test'
-  
+
   self.description = "Super Bla script"
-  
+
   def test?
     params(:t)
   end
 
   def do!
     if test?
-      logger.info "update string #{params(:u)}"        
-    else  
+      logger.info "update string #{params(:u)}"
+    else
       logger.info "data #{params(:d)}"
     end
   end
@@ -77,4 +78,4 @@ class BinScript
 end
 ```
 
-        
+

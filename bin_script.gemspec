@@ -7,11 +7,9 @@ Gem::Specification.new do |s|
 
   s.authors = ["Makarchev Konstantin", "Lifshits Dmitry"]
   s.autorequire = %q{init}
-  
-  s.description = %q{Easy writing and executing bins(executable scripts) in Rails Application (especially for crontab or god)}
-  
-  s.summary = %q{Easy writing and executing bins(executable scripts) in Rails Application (especially for crontab or god).
-For my purposes much better than Rake, Thor and Rails Runner.}
+
+  s.description = s.summary = \
+    %q{Gem for easy writing and executing scripts in Rails Application. For my purposes much better than Rake, Thor and Rails Runner.}
 
   s.email = %q{kostya27@gmail.com}
   s.homepage = %q{http://github.com/kostya/bin_script}
@@ -24,7 +22,8 @@ For my purposes much better than Rake, Thor and Rails Runner.}
 
   s.add_dependency 'activesupport'
   s.add_dependency 'rails'
+
   s.add_development_dependency "rspec"
   s.add_development_dependency "rake"
-   
+
 end
