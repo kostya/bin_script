@@ -17,7 +17,7 @@ class XLogger < Logger
     # Don't change default logger if asked
     if hint[:dont_touch_rails_logger].blank? && defined?(ActiveRecord::Base)
       ActiveRecord::Base.logger = self
-      
+
       def Rails.logger
         ActiveRecord::Base.logger
       end
@@ -46,7 +46,7 @@ class XLogger < Logger
   def rails_env_log_level
     prod_env? ? Logger::INFO : Logger::DEBUG
   end
-  
+
   def prod_env?
     defined?(Rails) && Rails.env == 'production'
   end

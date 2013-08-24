@@ -11,7 +11,7 @@ require File.dirname(__FILE__) + '/class_inheritable_attributes'
 class BinScript
   include ClassLevelInheritableAttributes
   class_inheritable_attributes :parameters, :log_level, :enable_locking, :enable_logging, :date_log_postfix, :disable_puts_for_tests, :description
-  
+
   # Default parameters
   @parameters = [
       {:key => :e, :type => :required, :description => "Rails environment ID (default - development)"},
@@ -25,10 +25,10 @@ class BinScript
 
   # Enable logging by default
   @enable_logging = true
-  
+
   # Default log level INFO or DEBUG for test env
   @log_level = (RailsStub.env == 'development' ? XLogger::DEBUG : XLogger::INFO)
-  
+
   # Bin Description
   @description = nil
 
@@ -72,7 +72,7 @@ class BinScript
       @logger.send(method,message)
     end
   end
-  
+
   class << self
     # Get parameter by key
     def get_parameter(key)
@@ -85,7 +85,7 @@ class BinScript
     def script_name
       self.to_s.underscore.gsub('/','__')
     end
-    
+
     def bin_name
       script_name.gsub('_script', '')
     end
@@ -121,15 +121,15 @@ class BinScript
     def calculate_script_class_filename(parts)
       files = []
 
-      # Collect from disk, needed class files      
+      # Collect from disk, needed class files
       parts.each do |p|
         off = "app/{bin,bins,models,script,scripts}/**/#{p}_script.rb"
         files += Dir[File.join(RailsStub.root, off)]
-        
+
         off = "script/**/#{p}_script.rb"
         files += Dir[File.join(RailsStub.root, off)]
       end
-      
+
       files.reverse
     end
 
@@ -170,7 +170,7 @@ class BinScript
       @parameters.each { |p| new << p if p[:key] != key }
       @parameters = new
     end
-    
+
     # Prepare ARGV parameters as hash
     def get_argv_values
       values = {}
@@ -187,7 +187,7 @@ class BinScript
       usage_msg += "Use: ./bin/#{bin_name}.rb [OPTIONS]\n\n"
       usage_msg += "\"#{self.description}\"\n\n" if message.nil? && self.description.present?
       usage_msg += "Availible options:\n\n"
-      
+
       @parameters.each do |param|
         arg = case param[:type]
           when :required then " v "
@@ -242,7 +242,7 @@ class BinScript
       usage_exit e.message
     end
   end
-  
+
   def check_required_params
     self.class.parameters.each do |param|
       if param[:type] == :required && @params_values.has_key?(param[:key])
@@ -259,14 +259,14 @@ class BinScript
 
     # Print usage and exit if asked
     usage_exit if params(:h)
-    
+
     check_required_params
-    
+
     # Create and check lock file if enabled
     if self.class.enable_locking
       @lock = LockFile.new(lock_filename)
       @lock.quiet = true # Don't write errors to STDERR
-      
+
       if(@lock.lock)
         msg = "--- Try start. Buy lock file '#{@lock.path}' already open in exclusive mode. Exit! ---"
         # puts msg # puts is not good idea, because cron will mail it, but this is not error
@@ -274,16 +274,16 @@ class BinScript
         exit
       end
     end
-    
+
     begin
       # Log important info and call script job
       info ""
-      
+
       log_params = {:env => RailsStub.env, :log_level => (self.class.enable_logging ? @logger.level : nil), :lock_file => (self.class.enable_locking ? @lock.path : nil)}
-      
+
       info "> Script #{self.class.script_name} started! (#{log_params.inspect})"
       info "- Parameters: #{@params_values.inspect}"
-      
+
       start = Time.now
 
       # Инкрементируем счетчик запусков этого скрипта
@@ -408,11 +408,11 @@ EXCEPTION
   end
 
   def inc_counter(id, counter = 1)
-    # stub    
+    # stub
   end
-  
+
   def notify_about_error(ex)
     # stub
   end
-  
+
 end

@@ -5,7 +5,7 @@ describe BinScript do
     root = Pathname.new(File.dirname(__FILE__) + '/test_dir/').realpath.to_s
     Rails.stub(:root).and_return(root)
   end
-  
+
   class TestScript < BinScript
     noarg    :n, "Test parameter that can't have argument"
     optional :o, :description => "Test parameter that can have argument", :alias => :oo
@@ -31,7 +31,7 @@ describe BinScript do
       end
     end
   end
-  
+
   describe "parameters" do
     it 'should accept string as description' do
       TestScript.get_parameter(:n)[:description].should == "Test parameter that can't have argument"

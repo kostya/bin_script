@@ -37,5 +37,5 @@ class <%= class_name %>Script < BinScript
   def do!
     logger.info "Script <%= class_name %> works!"
   end
-  
+
 end
