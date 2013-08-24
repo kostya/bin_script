@@ -72,7 +72,7 @@ end
 ``` ruby
 class BinScript
   def notify_about_error(exception)
-      Mailter.some_notification(exception)...
+    Mailter.some_notification(exception)...
   end
 end
 ```

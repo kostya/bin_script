@@ -200,7 +200,8 @@ class BinScript
       usage_msg
     end
 
-    private
+  private
+
     # Prepare parameters in Getoptlong lib format
     def get_getoptlong_params
       result = []
@@ -369,7 +370,7 @@ class BinScript
     params(:l).blank? ? File.join(RailsStub.root, 'log', "#{self.class.script_name}#{log_filename_time_part}.log") : params(:l)
   end
 
-  private
+private
 
   # Current time logname part.
   def log_filename_time_part
